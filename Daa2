@@ -1,0 +1,75 @@
+# Huffman Encoding using Greedy Strategy
+
+import heapq
+
+# Create a class for tree nodes
+class Node:
+    def __init__(self, char, freq):
+        self.char = char
+        self.freq = freq
+        self.left = None
+        self.right = None
+
+    # For priority queue comparison
+    def __lt__(self, other):
+        return self.freq < other.freq
+
+
+# Function to generate Huffman Codes
+def huffman_encoding(char_freq):
+    # Create a min-heap (priority queue)
+    heap = [Node(char, freq) for char, freq in char_freq.items()]
+    heapq.heapify(heap)
+
+    # Combine two lowest-frequency nodes until one tree remains
+    while len(heap) > 1:
+        left = heapq.heappop(heap)
+        right = heapq.heappop(heap)
+
+        new_node = Node(None, left.freq + right.freq)
+        new_node.left = left
+        new_node.right = right
+
+        heapq.heappush(heap, new_node)
+
+    # Get root node
+    root = heap[0]
+    huffman_codes = {}
+
+    # Recursive function to assign binary codes
+    def generate_codes(node, current_code=""):
+        if node is None:
+            return
+        if node.char is not None:
+            huffman_codes[node.char] = current_code
+            return
+        generate_codes(node.left, current_code + "0")
+        generate_codes(node.right, current_code + "1")
+
+    generate_codes(root)
+    return huffman_codes
+
+
+# Main Program
+if __name__ == "__main__":
+    text = input("Enter the text to encode: ")
+
+    # Calculate frequency of each character
+    freq = {}
+    for ch in text:
+        freq[ch] = freq.get(ch, 0) + 1
+
+    print("\nCharacter Frequencies:")
+    for ch, f in freq.items():
+        print(f"{ch}: {f}")
+
+    # Huffman Encoding
+    codes = huffman_encoding(freq)
+
+    print("\nHuffman Codes:")
+    for ch, code in codes.items():
+        print(f"{ch}: {code}")
+
+    # Encode text
+    encoded_text = ''.join(codes[ch] for ch in text)
+    print("\nEncoded Text:", encoded_text)
