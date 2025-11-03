@@ -1,0 +1,56 @@
+# Fractional Knapsack Problem using Greedy Method
+
+def fractional_knapsack(value, weight, capacity):
+    n = len(value)
+    
+    # Calculate value/weight ratio and store with item number
+    items = []
+    for i in range(n):
+        ratio = value[i] / weight[i]
+        items.append((i + 1, value[i], weight[i], ratio))  # (item no, value, weight, ratio)
+
+    # Sort items by ratio in descending order
+    items.sort(key=lambda x: x[3], reverse=True)
+
+    total_value = 0.0
+    remaining_capacity = capacity
+
+    print("\nItem\tValue\tWeight\tValue/Weight")
+    for item_no, val, wt, rt in items:
+        print(f"{item_no}\t{val}\t{wt}\t{rt:.2f}")
+
+    print("\nItems selected:")
+
+    # Pick items based on highest ratio
+    for item_no, val, wt, rt in items:
+        if remaining_capacity >= wt:
+            # Take full item
+            total_value += val
+            remaining_capacity -= wt
+            print(f"Item {item_no} taken fully (Value = {val})")
+        else:
+            # Take fractional part
+            fraction = remaining_capacity / wt
+            total_value += val * fraction
+            print(f"Item {item_no} taken {fraction*100:.2f}% (Value = {val * fraction:.2f})")
+            break  # Knapsack is full
+
+    return total_value
+
+
+# ----- Main -----
+if __name__ == "__main__":
+    n = int(input("Enter number of items: "))
+    value = []
+    weight = []
+
+    for i in range(n):
+        v = float(input(f"Enter value of item {i+1}: "))
+        w = float(input(f"Enter weight of item {i+1}: "))
+        value.append(v)
+        weight.append(w)
+
+    capacity = float(input("Enter capacity of knapsack: "))
+
+    max_value = fractional_knapsack(value, weight, capacity)
+    print(f"\nMaximum value in knapsack = {max_value:.2f}")
