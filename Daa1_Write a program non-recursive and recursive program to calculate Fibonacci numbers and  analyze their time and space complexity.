@@ -1,0 +1,37 @@
+# Recursive Fibonacci
+step_count_rec = 0
+
+def fib_recursive(n):
+    global step_count_rec
+    step_count_rec += 1
+    if n <= 1:
+        return n
+    else:
+        return fib_recursive(n - 1) + fib_recursive(n - 2)
+
+
+# Non-Recursive (Iterative) Fibonacci
+def fib_iterative(n):
+    step_count = 0
+    a, b = 0, 1
+    for i in range(n):
+        step_count += 1
+        a, b = b, a + b
+    return a, step_count
+
+
+# Main Program
+n = int(input("Enter a number: "))
+
+# Recursive
+step_count_rec = 0
+rec_result = fib_recursive(n)
+print("\nUsing Recursion:")
+print("Fibonacci(", n, ") =", rec_result)
+print("Steps =", step_count_rec)
+
+# Non-Recursive
+iter_result, step_count_iter = fib_iterative(n)
+print("\nUsing Loop (Non-Recursive):")
+print("Fibonacci(", n, ") =", iter_result)
+print("Steps =", step_count_iter)
